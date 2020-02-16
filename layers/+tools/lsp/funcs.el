@@ -9,9 +9,11 @@
 ;;
 ;;; License: GPLv3
 
-(defun spacemacs//setup-lsp-jump-handler ()
+(defun spacemacs//setup-lsp-jump-handler (&rest modes)
   "Set jump handler for LSP with the given MODE."
-    (add-to-list 'spacemacs-jump-handlers '(lsp-ui-peek-find-definitions :async t)))
+  (dolist (m modes)
+    (add-to-list (intern (format "spacemacs-jump-handlers-%S" m))
+                 '(lsp-ui-peek-find-definitions :async t))))
 
 
 ;; Key bindings

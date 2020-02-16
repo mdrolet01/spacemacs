@@ -103,7 +103,7 @@ the user activate the completion manually."
   "Move point to end of current prompt when switching to insert state."
   (when (and (eq major-mode 'eshell-mode)
              ;; Not on last line, we might want to edit within it.
-             (not (>= (point) eshell-last-output-end))
+             (not (eq (line-end-position) (point-max)))
              ;; Not on the last sent command if we use smart-eshell so we can
              ;; edit it.
              (not (and shell-enable-smart-eshell

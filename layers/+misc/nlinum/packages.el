@@ -52,6 +52,5 @@
             (spacemacs/set-leader-keys "tr" 'spacemacs/nlinum-relative-toggle)))))
 
   (defconst nlinum-packages nil)
-  (when (configuration-layer/layer-usedp 'nlinum)
-    (spacemacs-buffer/warning (concat "nlinum layer is deprecated for Emacs 26.1 and above."
-                                      " You can safely remove it from your dotfile."))))
+  (spacemacs-buffer/warning (concat "nlinum layer is deprecated for Emacs 26.1 and above."
+                      " You can safely remove it from your dotfile.")))

@@ -402,12 +402,12 @@
 	      (24 1))
 	     (cl-lib
 	      (0 5)))
-	    "Major mode for editing comma/char separated values" tar
-	    ((:maintainer nil . "emacs-devel@gnu.org")
+	    "Major mode for editing comma/char separated values" single
+	    ((:url . "http://elpa.gnu.org/packages/csv-mode.html")
+	     (:keywords "convenience")
 	     (:authors
 	      ("\"Francis J. Wright\"" . "F.J.Wright@qmul.ac.uk"))
-	     (:keywords "convenience")
-	     (:url . "http://elpa.gnu.org/packages/csv-mode.html"))])
+	     (:maintainer nil . "emacs-devel@gnu.org"))])
  (cycle-quotes .
 	       [(0 1)
 		nil "Cycle between quote styles" tar
@@ -1411,7 +1411,7 @@
 	      (:maintainer "Michael Heerdegen" . "michael_heerdegen@web.de")
 	      (:url . "https://github.com/michael-heerdegen/on-screen.el"))])
  (org .
-      [(9 3 6)
+      [(9 3 3)
        nil "Outline-based notes management and organizer" tar
        ((:url . "https://orgmode.org")
 	(:maintainer "Bastien Guerry" . "bzg@gnu.org")
@@ -1517,7 +1517,7 @@
 	     ("Phillip Lord" . "phillip.lord@russet.org.uk"))
 	    (:url . "http://elpa.gnu.org/packages/persist.html"))])
  (phps-mode .
-	    [(0 3 32)
+	    [(0 3 28)
 	     ((emacs
 	       (26)))
 	     "Major mode for PHP with Semantic integration" tar
@@ -2271,7 +2271,7 @@
 	     ("Ivan Kanis" . "ivan@kanis.fr"))
 	    (:maintainer "Ivan Kanis" . "ivan@kanis.fr"))])
  (xclip .
-	[(1 10)
+	[(1 9)
 	 nil "Copy&paste GUI clipboard from text terminal" single
 	 ((:url . "http://elpa.gnu.org/packages/xclip.html")
 	  (:keywords "convenience" "tools")

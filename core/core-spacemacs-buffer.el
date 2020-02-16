@@ -1008,9 +1008,7 @@ SEQ, START and END are the same arguments as for `cl-subseq'"
 
 (defun spacemacs-buffer/goto-buffer (&optional refresh)
   "Create the special buffer for `spacemacs-buffer-mode' and switch to it.
-REFRESH if the buffer should be redrawn.
-
-If a prefix argument is given, switch to it in an other, possibly new window."
+REFRESH if the buffer should be redrawn."
   (interactive)
   (let ((buffer-exists (buffer-live-p (get-buffer spacemacs-buffer-name)))
         (save-line nil))
@@ -1047,9 +1045,7 @@ If a prefix argument is given, switch to it in an other, possibly new window."
                    (forward-line (1- save-line))
                    (forward-to-indentation 0))
           (spacemacs-buffer/goto-link-line)))
-      (if current-prefix-arg
-          (switch-to-buffer-other-window spacemacs-buffer-name)
-        (switch-to-buffer spacemacs-buffer-name))
+      (switch-to-buffer spacemacs-buffer-name)
       (spacemacs//redisplay))))
 
 (add-hook 'window-setup-hook

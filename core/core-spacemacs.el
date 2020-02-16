@@ -128,7 +128,8 @@ the final step of executing code in `emacs-startup-hook'.")
           (mapconcat 'car dotspacemacs-default-font ", ")
         (car dotspacemacs-default-font)))))
   ;; spacemacs init
-  (setq inhibit-startup-screen t)
+  (setq inhibit-startup-screen nil)
+  ;;(setq inhibit-startup-screen t)
   (spacemacs-buffer/goto-buffer)
   (unless (display-graphic-p)
     ;; explicitly recreate the home buffer for the first GUI client

@@ -44,11 +44,7 @@
 (defun spacemacs//rust-setup-lsp ()
   "Setup lsp backend"
   (if (configuration-layer/layer-used-p 'lsp)
-      (progn 
-        (lsp)
-        (spacemacs/declare-prefix-for-mode 'rust-mode "ms" "switch")
-        (spacemacs/set-leader-keys-for-major-mode 'rust-mode
-          "ss" 'lsp-rust-switch-server))
+      (lsp)
     (spacemacs//lsp-layer-not-installed-message)))
 
 (defun spacemacs//rust-setup-lsp-company ()
