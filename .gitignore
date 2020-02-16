@@ -36,8 +36,7 @@ crown/
 eclipse.jdt.ls
 edts/
 elnode/
-elpa/
-eproject.lst
+(eproject.lst)
 eshell/alias
 eshell/history
 eshell/lastdir
