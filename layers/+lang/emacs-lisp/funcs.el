@@ -1,6 +1,6 @@
 ;;; funcs.el --- Emacs Lisp functions File
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -11,10 +11,9 @@
 
 
 
-;; Idea from http://www.reddit.com/r/emacs/comments/312ge1/i_created_this_function_because_i_was_tired_of/
+;; idea from http://www.reddit.com/r/emacs/comments/312ge1/i_created_this_function_because_i_was_tired_of/
 (defun spacemacs/eval-current-form ()
-  "Find and evaluate the current def* or set* command.
-Unlike `eval-defun', this does not go to topmost function."
+  "Looks for the current def* or set* command then evaluates, unlike `eval-defun', does not go to topmost function"
   (interactive)
   (save-excursion
     (search-backward-regexp "(def\\|(set")
@@ -40,9 +39,9 @@ Unlike `eval-defun', this does not go to topmost function."
   (eval-defun 'edebugit))
 
 (defun spacemacs/edebug-instrument-defun-off ()
-  "Toggle off instrumentalisation for the function under `defun'."
+  "Toggle on instrumentalisation for the function under `defun'."
   (interactive)
-  (eval-defun nil))
+  (eval-defun))
 
 (defun spacemacs/elisp-toggle-debug-expr-and-eval-func ()
   "Insert or remove debug expression, evaluate function and save buffer."
@@ -62,7 +61,7 @@ Unlike `eval-defun', this does not go to topmost function."
   "Additional processing when `edebug-mode' is activated or deactivated."
   (let ((evilified (or (eq 'vim dotspacemacs-editing-style)
                        (and (eq 'hybrid dotspacemacs-editing-style)
-                            hybrid-style-enable-evilified-state))))
+                            hybrid-mode-enable-evilified-state))))
     (if (not edebug-mode)
         ;; disable edebug-mode
         (when evilified (evil-normal-state))
@@ -105,11 +104,3 @@ Requires smartparens because all movement is done using `sp-forward-symbol'."
     (save-excursion
       (sp-forward-symbol)
       (call-interactively 'eval-last-sexp))))
-
-
-;; elisp comment text-object definition
-
-(defun spacemacs//define-elisp-comment-text-object ()
-  "Define a text object and a surround pair for elisp comments.
-Intended for use in mode hooks."
-  (spacemacs|define-text-object ";" "elisp-comment" ";; " ""))

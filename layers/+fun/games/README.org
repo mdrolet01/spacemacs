@@ -1,25 +1,22 @@
 #+TITLE: Games layer
 
-#+TAGS: fun|layer
-
 [[file:img/games.png]]
 
-* Table of Contents                     :TOC_5_gh:noexport:
-- [[#description][Description]]
-  - [[#features][Features:]]
-- [[#install][Install]]
-- [[#games-instructions][Games instructions]]
-  - [[#2048][2048]]
-  - [[#pacmacs][Pacmacs]]
-  - [[#sudoku][Sudoku]]
-  - [[#tetris][Tetris]]
-  - [[#typit][Typit]]
-    - [[#create-a-new-dictionary][Create a new dictionary]]
+* Table of Contents                                         :TOC_4_gh:noexport:
+ - [[#description][Description]]
+ - [[#install][Install]]
+ - [[#games-instructions][Games instructions]]
+   - [[#2048][2048]]
+   - [[#pacmacs][Pacmacs]]
+   - [[#sudoku][Sudoku]]
+   - [[#tetris][Tetris]]
+   - [[#typit][Typit]]
+     - [[#create-a-new-dictionary][Create a new dictionary]]
 
 * Description
-This layer allows you to play evilified games in Spacemacs.
+This layer allows you to play evilified games in spacemacs.
 
-** Features:
+The games available now are:
 - 2048-game
 - Pacmacs (Pacman for Emacs)
 - Sudoku
@@ -34,7 +31,7 @@ file.
 * Games instructions
 To run a game:
 
-| Key binding | Description                            |
+| Key Binding | Description                            |
 |-------------+----------------------------------------|
 | ~SPC a G~   | Open an =helm= buffer to select a game |
 
@@ -45,7 +42,7 @@ Possible helm actions:
 
 ** 2048
 
-| Key binding | Description          |
+| Key Binding | Description          |
 |-------------+----------------------|
 | ~h~         | Move the tiles left  |
 | ~j~         | Move the tiles down  |
@@ -54,7 +51,7 @@ Possible helm actions:
 
 ** Pacmacs
 
-| Key binding | Description |
+| Key Binding | Description |
 |-------------+-------------|
 | ~h~         | Move left   |
 | ~j~         | Move down   |
@@ -64,7 +61,7 @@ Possible helm actions:
 
 ** Sudoku
 
-| Key bindings | Description  |
+| Key Bindings | Description  |
 | ~h~          | Move left    |
 | ~j~          | Move down    |
 | ~k~          | Move up      |
@@ -78,7 +75,7 @@ Possible helm actions:
 
 ** Tetris
 
-| Key binding | Description                    |
+| Key Binding | Description                    |
 |-------------+--------------------------------|
 | ~h~         | Move block to the left         |
 | ~i~         | Rotate block counter-clockwise |

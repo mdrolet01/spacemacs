@@ -1,6 +1,6 @@
 ;;; config.el --- Clojure Layer configuration File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -9,7 +9,14 @@
 ;;
 ;;; License: GPLv3
 
+;; ---------------------------------------------------------------------------
+;; Prefixes
+;; ---------------------------------------------------------------------------
+
 ;; Variables
+
+(spacemacs|defvar-company-backends cider-mode)
+(spacemacs|defvar-company-backends cider-repl-mode)
 
 (spacemacs|define-jump-handlers clojure-mode)
 (spacemacs|define-jump-handlers clojurec-mode)
@@ -18,13 +25,4 @@
 (spacemacs|define-jump-handlers cider-repl-mode)
 
 (defvar clojure-enable-fancify-symbols nil
-  "If non-nil, the `fancify-symbols' function is enabled.")
-
-(defvar clojure-enable-sayid nil
-  "If non-nil, the Sayid Clojure debugger is enabled.")
-
-(defvar clojure-enable-clj-refactor nil
-  "If non-nil, the clj-refactor is enabled.")
-
-(defvar clojure-enable-linters nil
-  "If non-nil, enable clojure linters.")
+  "If non nil the `fancify-symbols' function is enabled.")

@@ -1,24 +1,11 @@
-;;; config.el --- Racket Layer packages File for Spacemacs
-;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
-;;
-;; Author: Sylvain Benner <sylvain.benner@gmail.com>
-;; URL: https://github.com/syl20bnr/spacemacs
-;;
-;; This file is not part of GNU Emacs.
-;;
-;;; License: GPLv3
-
 (setq racket-packages
-      '(
-        company
-        company-quickhelp
-        ggtags
-        counsel-gtags
-        evil-cleverparens
-        helm-gtags
-        racket-mode
-        ))
+  '(
+    company
+    company-quickhelp
+    ggtags
+    helm-gtags
+    racket-mode
+    ))
 
 (defun racket/post-init-company ()
   ;; this is the only thing to do to enable company in racket-mode
@@ -37,14 +24,6 @@
 
 (defun racket/post-init-ggtags ()
   (add-hook 'racket-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun racket/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'racket-mode))
-
-(defun racket/pre-init-evil-cleverparens ()
-  (spacemacs|use-package-add-hook evil-cleverparens
-    :pre-init
-    (add-to-list 'evil-lisp-safe-structural-editing-modes 'racket-mode)))
 
 (defun racket/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'racket-mode))
@@ -132,4 +111,9 @@
         ;; Tests
         "tb" 'racket-test
         "tB" 'spacemacs/racket-test-with-coverage)
-      (define-key racket-mode-map (kbd "H-r") 'racket-run))))
+      (define-key racket-mode-map (kbd "H-r") 'racket-run)
+      ;; remove racket auto-insert of closing delimiter
+      ;; see https://github.com/greghendershott/racket-mode/issues/140
+      (define-key racket-mode-map ")" 'self-insert-command)
+      (define-key racket-mode-map "]" 'self-insert-command)
+      (define-key racket-mode-map "}" 'self-insert-command))))

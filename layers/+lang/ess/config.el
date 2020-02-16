@@ -1,6 +1,6 @@
 ;;; config.el --- ESS Layer configuration File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -11,5 +11,5 @@
 
 ;; Variables
 
-(defvar ess-assign-key nil
-  "Call `ess-insert-assign'.")
+(defvar ess-enable-smart-equals nil
+  "If non-nil smart-equal support is enabled")

@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs Completion Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -41,15 +41,8 @@
         (props (cddr args)))
     ;; fuzzy matching is not supported in async sources
     (unless (child-of-class-p source-type helm-source-async)
-      (plist-put props :fuzzy-match (eq 'always helm-use-fuzzy))))
+      (plist-put props :fuzzy-match (eq 'always dotspacemacs-helm-use-fuzzy))))
   (apply f args))
-
-(defun spacemacs//helm-find-files-enable-helm--in-fuzzy ()
-  "Enabling `helm--in-fuzzy' with the hook:
-`helm-find-files-after-init-hook'. Fixes the error:
-Helm issued errors: helm-match-from-candidates in source `Actions': wrong-type-argument (stringp nil)
-When searching in the helm-find-files (`SPC f f') actions (`C-z')."
-  (setq helm--in-fuzzy t))
 
 ;; Helm Header line
 
@@ -65,7 +58,7 @@ When searching in the helm-find-files (`SPC f f') actions (`C-z')."
 
 (defun helm-toggle-header-line ()
   "Hide the `helm' header if there is only one source."
-  (when helm-no-header
+  (when dotspacemacs-helm-no-header
     (if (> (length helm-sources) 1)
         (set-face-attribute
          'helm-source-header
@@ -88,11 +81,9 @@ When searching in the helm-find-files (`SPC f f') actions (`C-z')."
   (cond
    ((or (eq 'vim style)
         (and (eq 'hybrid style)
-             hybrid-style-enable-hjkl-bindings))
+             hybrid-mode-enable-hjkl-bindings))
     (define-key helm-map (kbd "C-j") 'helm-next-line)
     (define-key helm-map (kbd "C-k") 'helm-previous-line)
-    (define-key helm-map (kbd "C-S-j") 'helm-follow-action-forward)
-    (define-key helm-map (kbd "C-S-k") 'helm-follow-action-backward)
     (define-key helm-map (kbd "C-h") 'helm-next-source)
     (define-key helm-map (kbd "C-S-h") 'describe-key)
     (define-key helm-map (kbd "C-l") (kbd "RET"))
@@ -111,8 +102,18 @@ When searching in the helm-find-files (`SPC f f') actions (`C-z')."
 
 ;; Helm Window position
 
+(defvar spacemacs-helm-display-help-buffer-regexp '("*.*Helm.*Help.**"))
+(defvar spacemacs-helm-display-buffer-regexp
+  `("*.*helm.**"
+    (display-buffer-in-side-window)
+    (inhibit-same-window . t)
+    (side . ,dotspacemacs-helm-position)
+    (window-width . 0.6)
+    (window-height . 0.4)))
+(defvar spacemacs-display-buffer-alist nil)
+
 (defun spacemacs//display-helm-window (buffer &optional resume)
-  "Display the Helm window respecting `helm-position'."
+  "Display the Helm window respecting `dotspacemacs-helm-position'."
   (let ((display-buffer-alist
          (list spacemacs-helm-display-help-buffer-regexp
                ;; this or any specialized case of Helm buffer must be
@@ -148,7 +149,7 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
           (doc (format "Select helm action #%d" n)))
       (eval `(defun ,func ()
                ,doc
-               (interactive)
+               (intern)
                (helm-select-nth-action ,(1- n)))))))
 
 (defun spacemacs/helm-ts-edit ()
@@ -156,11 +157,7 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (interactive)
   (cond
    ((string-equal "*helm-ag*" helm-buffer)
-    (helm-ag-edit))
-   ((string-equal "*helm find files*" helm-buffer)
-    (spacemacs/helm-find-files-edit))
-   ((string-equal "*Helm Swoop*" helm-buffer)
-    (helm-swoop-edit))))
+    (helm-ag-edit))))
 
 (defun spacemacs//helm-navigation-ts-on-enter ()
   "Initialization of helm transient-state."
@@ -201,11 +198,9 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (cond
    ((or (eq 'vim style)
         (and (eq 'hybrid style)
-             hybrid-style-enable-hjkl-bindings))
-    (dolist (map (list ivy-minibuffer-map
-                       ivy-switch-buffer-map))
-      (define-key map (kbd "C-j") 'ivy-next-line)
-      (define-key map (kbd "C-k") 'ivy-previous-line))
+             hybrid-mode-enable-hjkl-bindings))
+    (define-key ivy-minibuffer-map (kbd "C-j") 'ivy-next-line)
+    (define-key ivy-minibuffer-map (kbd "C-k") 'ivy-previous-line)
     (define-key ivy-minibuffer-map (kbd "C-h") (kbd "DEL"))
     ;; Move C-h to C-S-h
     (define-key ivy-minibuffer-map (kbd "C-S-h") help-map)
@@ -218,9 +213,6 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
     (define-key ivy-minibuffer-map (kbd "C-h") nil)
     (define-key ivy-minibuffer-map (kbd "C-l") nil))))
 
-(defun spacemacs//ivy-matcher-desc ()
-  (replace-regexp-in-string "ivy--" "" (format "%s" ivy--regex-function)))
-
 
 ;; Ido
 
@@ -230,15 +222,15 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   ;; iteration setup a whole new minibuffer, we have to keep
   ;; track of any activated ido navigation transient-state and force
   ;; the reactivation at each iteration.
-  (when spacemacs--ido-navigation-ts-enabled
-    (spacemacs/ido-navigation-transient-state/body)))
+  (when spacemacs--ido-navigation-ms-enabled
+    (spacemacs/ido-navigation-micro-state)))
 
 (defun spacemacs//ido-setup ()
-  (when spacemacs--ido-navigation-ts-face-cookie-minibuffer
+  (when spacemacs--ido-navigation-ms-face-cookie-minibuffer
     (face-remap-remove-relative
-     spacemacs--ido-navigation-ts-face-cookie-minibuffer))
+     spacemacs--ido-navigation-ms-face-cookie-minibuffer))
   ;; be sure to wipe any previous transient-state flag
-  (setq spacemacs--ido-navigation-ts-enabled nil)
+  (setq spacemacs--ido-navigation-ms-enabled nil)
   ;; overwrite the key bindings for ido vertical mode only
   (define-key ido-completion-map (kbd "C-<return>") 'ido-select-text)
   ;; use M-RET in terminal
@@ -261,8 +253,8 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (define-key ido-completion-map (kbd "C-t") 'spacemacs/ido-invoke-in-new-frame)
   (define-key ido-completion-map (kbd "C-v") 'spacemacs/ido-invoke-in-horizontal-split)
   ;; initiate transient-state
-  (define-key ido-completion-map (kbd "M-SPC") 'spacemacs/ido-navigation-transient-state/body)
-  (define-key ido-completion-map (kbd "S-M-SPC") 'spacemacs/ido-navigation-transient-state/body))
+  (define-key ido-completion-map (kbd "M-SPC") 'spacemacs/ido-navigation-micro-state)
+  (define-key ido-completion-map (kbd "s-M-SPC") 'spacemacs/ido-navigation-micro-state))
 
 (defun spacemacs/ido-invoke-in-other-window ()
   "signals ido mode to switch to (or create) another window after exiting"
@@ -288,24 +280,24 @@ See https://github.com/syl20bnr/spacemacs/issues/3700"
   (setq ido-exit-minibuffer-target-window 'frame)
   (ido-exit-minibuffer))
 
-(defun spacemacs//ido-navigation-ts-set-face ()
+(defun spacemacs//ido-navigation-ms-set-face ()
   "Set faces for ido navigation transient-state."
-  (setq spacemacs--ido-navigation-ts-face-cookie-minibuffer
+  (setq spacemacs--ido-navigation-ms-face-cookie-minibuffer
         (face-remap-add-relative
          'minibuffer-prompt
-         'spacemacs-ido-navigation-ts-face)))
+         'spacemacs-ido-navigation-ms-face)))
 
-(defun spacemacs//ido-navigation-ts-on-enter ()
+(defun spacemacs//ido-navigation-ms-on-enter ()
   "Initialization of ido transient-state."
-  (setq spacemacs--ido-navigation-ts-enabled t)
-  (spacemacs//ido-navigation-ts-set-face))
+  (setq spacemacs--ido-navigation-ms-enabled t)
+  (spacemacs//ido-navigation-ms-set-face))
 
-(defun spacemacs//ido-navigation-ts-on-exit ()
+(defun spacemacs//ido-navigation-ms-on-exit ()
   "Action to perform when exiting ido transient-state."
   (face-remap-remove-relative
-   spacemacs--ido-navigation-ts-face-cookie-minibuffer))
+   spacemacs--ido-navigation-ms-face-cookie-minibuffer))
 
-(defun spacemacs//ido-navigation-ts-full-doc ()
+(defun spacemacs//ido-navigation-ms-full-doc ()
   "Full documentation for ido navigation transient-state."
   "
  [?]          display this help

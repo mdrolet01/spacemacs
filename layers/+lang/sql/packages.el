@@ -1,6 +1,6 @@
 ;;; packages.el --- sql Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Brian Hicks <brian@brianthicks.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -9,23 +9,7 @@
 ;;
 ;;; License: GPLv3
 
-(setq sql-packages
-      '(
-        company
-        org
-        sql
-        ;; This mode is more up-to-date than the MELPA one.
-        ;; Turns out that it is available in GNU ELPA but we cannot
-        ;; force Spacemacs to fetch from it for now, it will always
-        ;; pickup the MELPA version. So for now we use an explicit
-        ;; recip to fetch from GitHUb the package.
-        (sql-indent :location (recipe
-                               :fetcher github
-                               :repo "alex-hhh/emacs-sql-indent"
-                               :files ("sql-indent.el")))
-        (sqlfmt :location local)
-        (sqlup-mode :toggle sql-capitalize-keywords)
-        ))
+(setq sql-packages '(sql sql-indent))
 
 (defun sql/init-sql ()
   (use-package sql
@@ -33,13 +17,14 @@
     :init (spacemacs/register-repl 'sql 'spacemacs/sql-start "sql")
     :config
     (progn
-      (setq
-       ;; should not set this to anything else than nil
-       ;; the focus of SQLi is handled by spacemacs conventions
-       sql-pop-to-buffer-after-send-region nil)
-      (advice-add 'sql-add-product :after #'spacemacs/sql-populate-products-list)
-      (advice-add 'sql-del-product :after #'spacemacs/sql-populate-products-list)
-      (spacemacs/sql-populate-products-list)
+      (setq spacemacs-sql-highlightable sql-product-alist
+            spacemacs-sql-startable (remove-if-not
+                                (lambda (product) (sql-get-product-feature (car product) :sqli-program))
+                                sql-product-alist)
+
+            ;; should not set this to anything else than nil
+            ;; the focus of SQLi is handled by spacemacs conventions
+            sql-pop-to-buffer-after-send-region nil)
 
       (defun spacemacs//sql-source (products)
         "return a source for helm selection"
@@ -93,53 +78,11 @@
           (sql-send-region start end)
           (evil-insert-state)))
 
-      (defun spacemacs/sql-send-line-and-next-and-focus ()
-        "Send the current line to SQLi and switch to SQLi in `insert state'."
-        (interactive)
-        (let ((sql-pop-to-buffer-after-send-region t))
-          (sql-send-line-and-next)))
-
-      (defun spacemacs/sql-send-string ()
-        "Send a string to SQLi and stays in the same region."
-        (interactive)
-        (let ((sql-pop-to-buffer-after-send-region nil))
-          (call-interactively 'sql-send-string)))
-
-      (defun spacemacs/sql-send-buffer ()
-        "Send the buffer to SQLi and stays in the same region."
-        (interactive)
-        (let ((sql-pop-to-buffer-after-send-region nil))
-          (sql-send-buffer)))
-
-      (defun spacemacs/sql-send-paragraph ()
-        "Send the paragraph to SQLi and stays in the same region."
-        (interactive)
-        (let ((sql-pop-to-buffer-after-send-region nil))
-          (sql-send-paragraph)))
-
-      (defun spacemacs/sql-send-region (start end)
-        "Send region to SQLi and stays in the same region."
-        (interactive "r")
-        (let ((sql-pop-to-buffer-after-send-region nil))
-          (sql-send-region start end)))
-
-      (defun spacemacs/sql-send-line-and-next ()
-        "Send the current line to SQLi and stays in the same region."
-        (interactive)
-        (let ((sql-pop-to-buffer-after-send-region nil))
-          (sql-send-line-and-next)))
-
-      (spacemacs/declare-prefix-for-mode 'sql-mode "mb" "buffer")
-      (spacemacs/declare-prefix-for-mode 'sql-mode "mg" "goto")
-      (spacemacs/declare-prefix-for-mode 'sql-mode "mh" "dialects")
-      (spacemacs/declare-prefix-for-mode 'sql-mode "ml" "listing")
-      (spacemacs/declare-prefix-for-mode 'sql-mode "ms" "interactivity")
       (spacemacs/set-leader-keys-for-major-mode 'sql-mode
         "'" 'spacemacs/sql-start
 
         ;; sqli buffer
         "bb" 'sql-show-sqli-buffer
-        "bc" 'sql-connect
         "bs" 'sql-set-sqli-buffer
 
         ;; dialects
@@ -152,20 +95,17 @@
         ;; paragraph gets "f" here because they can be assimilated to functions.
         ;; If you separate your commands in a SQL file, this key will send the
         ;; command around point, which is what you probably want.
-        "sf" 'spacemacs/sql-send-paragraph
+        "sf" 'sql-send-paragraph
         "sF" 'spacemacs/sql-send-paragraph-and-focus
-        "sl" 'spacemacs/sql-send-line-and-next
-        "sL" 'spacemacs/sql-send-line-and-next-and-focus
-        "sq" 'spacemacs/sql-send-string
+        "sq" 'sql-send-string
         "sQ" 'spacemacs/sql-send-string-and-focus
-        "sr" 'spacemacs/sql-send-region
+        "sr" 'sql-send-region
         "sR" 'spacemacs/sql-send-region-and-focus
 
         ;; listing
         "la" 'sql-list-all
         "lt" 'sql-list-table)
 
-      (spacemacs/declare-prefix-for-mode 'sql-interactive-mode "mb" "buffer")
       (spacemacs/set-leader-keys-for-major-mode 'sql-interactive-mode
         ;; sqli buffer
         "br" 'sql-rename-buffer
@@ -176,39 +116,4 @@
 
 (defun sql/init-sql-indent ()
   (use-package sql-indent
-    :if sql-auto-indent
-    :defer t
-    :init (add-hook 'sql-mode-hook 'sqlind-minor-mode)
-    :config (spacemacs|hide-lighter sqlind-minor-mode)))
-
-(defun sql/init-sqlfmt ()
-  (use-package sqlfmt
-    :commands sqlfmt-buffer
-    :init
-    (spacemacs/set-leader-keys-for-major-mode 'sql-mode
-      "=" 'sqlfmt-buffer)))
-
-(defun sql/init-sqlup-mode ()
-  (use-package sqlup-mode
-    :defer t
-    :init
-    (progn
-      (add-hook 'sql-mode-hook 'sqlup-mode)
-      (unless sql-capitalize-keywords-disable-interactive
-        (add-hook 'sql-interactive-mode-hook 'sqlup-mode))
-      (spacemacs/set-leader-keys-for-major-mode 'sql-mode
-        "c" 'sqlup-capitalize-keywords-in-region))
-    :config
-    (progn
-      (spacemacs|hide-lighter sqlup-mode)
-      (setq sqlup-blacklist (append sqlup-blacklist
-                                    sql-capitalize-keywords-blacklist)))))
-
-(defun sql/post-init-company ()
-  (spacemacs|add-company-backends
-    :backends company-capf
-    :modes sql-mode))
-
-(defun sql/pre-init-org ()
-  (spacemacs|use-package-add-hook org
-    :post-config (add-to-list 'org-babel-load-languages '(sql . t))))
+    :defer t))

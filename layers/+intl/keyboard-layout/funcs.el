@@ -1,6 +1,6 @@
 ;;; funcs.el --- keyboard-layout Layer functions File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Fabien Dubosson <fabien.dubosson@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -27,7 +27,7 @@
                (mapcar
                 (lambda (modifier)
                   (cons (concat modifier key1) (concat modifier key2)))
-                '("C-" "M-" "C-S-")))))
+                '("" "C-" "M-" "C-S-")))))
           basemap))
 
 (defun kl//define-key (maps key def bindings)
@@ -57,7 +57,7 @@ then `c' will be defined to the old `a' function, not to `b'."
   "Replace recursively all occurrences of `elem' by `repl' in the
 list `lst'."
   (declare (indent 0))
-  (if (cl-typep lst 'list)
+  (if (typep lst 'list)
       (let* ((body-position (cl-position elem lst)))
         (if body-position
             ;; The element is in the list, replace it
@@ -81,8 +81,7 @@ key."
     (let* ((key2 (cdr (assoc key1 rebinding-map)))
            (bind1 (assoc key1 rebinding-map))
            (bind2 (assoc key2 rebinding-map)))
-      (when (and prefix
-                 (not (string-empty-p prefix)))
+      (when prefix
         (defun kl//guess-prefixit (bind)
           `(,(concat prefix (car bind)) . ,(concat prefix (cdr bind))))
         (setq bind1 (kl//guess-prefixit bind1))
@@ -134,7 +133,7 @@ evil states, except insert."
 (defun kl/correct-keys (map &rest keys)
   (declare (indent 1))
   (let ((bindings (mapcan #'kl//guess-rebindings keys)))
-    (kl//remap-key-as map (cl-remove-if #'null bindings))))
+    (kl//remap-key-as map (remove-if #'null bindings))))
 
 (defun kl/evil-correct-keys (state map &rest keys)
   (declare (indent 2))

@@ -17,19 +17,21 @@
     :config
     (progn
       (spacemacs|hide-lighter evil-snipe-local-mode)
-      (evil-snipe-mode 1)
-      (when  evil-snipe-enable-alternate-f-and-t-behaviors
-        (setq evil-snipe-repeat-scope 'whole-buffer)
-        (evil-snipe-override-mode 1)))))
+      (if evil-snipe-enable-alternate-f-and-t-behaviors
+          (progn
+            (setq evil-snipe-repeat-scope 'whole-buffer)
+            (evil-snipe-override-mode 1))
+        (evil-snipe-mode 1)))))
 
 (defun evil-snipe/post-init-magit ()
-  (add-hook 'magit-mode-hook 'turn-off-evil-snipe-mode)
-  (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-mode)
-  (when evil-snipe-enable-alternate-f-and-t-behaviors
-    (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
-    (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-override-mode)))
+  (if evil-snipe-enable-alternate-f-and-t-behaviors
+      (progn
+        (add-hook 'magit-mode-hook 'turn-off-evil-snipe-override-mode)
+        (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-override-mode))
+    (add-hook 'magit-mode-hook 'turn-off-evil-snipe-mode)
+    (add-hook 'git-rebase-mode-hook 'turn-off-evil-snipe-mode)))
 
 (defun evil-snipe/post-init-ranger ()
-  (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)
-  (when evil-snipe-enable-alternate-f-and-t-behaviors
-    (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-override-mode)))
+  (if evil-snipe-enable-alternate-f-and-t-behaviors
+      (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-override-mode)
+    (add-hook 'ranger-mode-hook 'turn-off-evil-snipe-mode)))

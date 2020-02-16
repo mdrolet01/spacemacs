@@ -1,24 +1,18 @@
-#+TITLE: Jabber layer
-
-#+TAGS: chat|layer
+#+TITLE: Jabber contribution layer for Spacemacs
 
 [[file:img/jabber-logo.gif]]
 
-* Table of Contents                     :TOC_5_gh:noexport:
-- [[#description][Description]]
-  - [[#features][Features:]]
-- [[#install][Install]]
-- [[#key-bindings][Key bindings]]
-  - [[#jabber-roster][Jabber Roster]]
-- [[#hipchat][HipChat]]
-  - [[#authentication][Authentication]]
-  - [[#joining-rooms][Joining rooms]]
+* Table of Contents                                         :TOC_4_gh:noexport:
+ - [[#description][Description]]
+ - [[#install][Install]]
+ - [[#key-bindings][Key bindings]]
+   - [[#jabber-roster][Jabber Roster]]
+ - [[#hipchat][HipChat]]
+   - [[#authentication][Authentication]]
+   - [[#joining-rooms][Joining rooms]]
 
 * Description
-This layer adds support for the Jabber (XMPP) client for Emacs
-
-** Features:
-- Use Jabber without having to leave Spacemacs
+This layer adds keybindings for jabber.el. jabber.el is a Jabber (XMPP) client for Emacs
 
 * Install
 To use this configuration layer, add it to your =~/.spacemacs=. You will need to
@@ -27,12 +21,11 @@ file.
 
 * Key bindings
 
-| Key binding | Description          |
+| Key Binding | Description          |
 | ~SPC a j~   | Connect all accounts |
 
 ** Jabber Roster
-
-| Key binding | Description                          |
+| Key Binding | Description                          |
 | ~SPC m a~   | Jabber send presence                 |
 | ~SPC m b~   | Jabber get browse                    |
 | ~SPC m d~   | Jabber disconnect                    |
@@ -49,8 +42,7 @@ file.
 * HipChat
 ** Authentication
 To find YOUR_JABBER_ID visit "XMPP/Jabber info" section on your profile page at hipchat.com
-
-#+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
 
   (setq ssl-program-name "gnutls-cli"
         ssl-program-arguments '("--insecure" "-p" service host)
@@ -60,12 +52,12 @@ To find YOUR_JABBER_ID visit "XMPP/Jabber info" section on your profile page at 
                                (:port . 5223)
                                (:password . "YOUR_PASS")
                                (:connection-type . ssl))))
-#+END_SRC
+ #+end_src
 
 ** Joining rooms
 To simplify joining rooms, you can use something like this:
 
-#+BEGIN_SRC emacs-lisp
+ #+begin_src emacs-lisp
   (defvar hipchat-room-list '(
                               ("HIPCHAT NAME" . "XMPP/JABBER NAME")
                               ))
@@ -82,4 +74,5 @@ To simplify joining rooms, you can use something like this:
        (concat hipchat-number "" hipchat-mapping "@conf.hipchat.com")
        hipchat-nickname
        t)))
-#+END_SRC
+
+ #+end_src

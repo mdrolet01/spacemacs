@@ -1,6 +1,6 @@
 ;;; funcs.el --- Spacemacs editing Layer functions File
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -22,37 +22,14 @@
   (indent-according-to-mode))
 
 (defun spacemacs/smart-closing-parenthesis ()
-  "Insert a closing pair delimiter or move point past existing delimiter.
-
-If the expression at point is already balanced and there is a
-closing delimiter for that expression on the current line, move
-point forward past the closing delimiter.
-
-If the expression is balanced but there is no closing delimiter
-on the current line, insert a literal ')' character.
-
-If the expression is not balanced, insert a closing delimiter for
-the current expression.
-
-This command uses Smartparens navigation commands and therefore
-recognizes pair delimiters that have been defined using `sp-pair'
-or `sp-local-pair'."
   (interactive)
   (let* ((sp-navigate-close-if-unbalanced t)
          (current-pos (point))
          (current-line (line-number-at-pos current-pos))
-         next-pos next-line)
-    (save-excursion
-      (let ((buffer-undo-list)
-            (modified (buffer-modified-p)))
-        (unwind-protect
-            (progn
-              (sp-up-sexp)
-              (setq next-pos (point)
-                    next-line (line-number-at-pos)))
-          (primitive-undo (length buffer-undo-list)
-                          buffer-undo-list)
-          (set-buffer-modified-p modified))))
+         (next-pos (save-excursion
+                     (sp-up-sexp)
+                     (point)))
+         (next-line (line-number-at-pos next-pos)))
     (cond
      ((and (= current-line next-line)
            (not (= current-pos next-pos)))
@@ -62,8 +39,7 @@ or `sp-local-pair'."
 
 (defun spacemacs//conditionally-enable-smartparens-mode ()
   "Enable `smartparens-mode' in the minibuffer, during `eval-expression'."
-  (if (or (eq this-command 'eval-expression)
-          (eq this-command 'eldoc-eval-expression))
+  (if (eq this-command 'eval-expression)
       (smartparens-mode)))
 
 (defun spacemacs//adaptive-smartparent-pair-overlay-face ()

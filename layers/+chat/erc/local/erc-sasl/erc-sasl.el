@@ -37,7 +37,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile (require 'cl))
 
 (defvar erc-sasl-use-sasl t
   "Set to nil to disable SASL auth")

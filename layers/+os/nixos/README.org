@@ -1,25 +1,23 @@
 #+TITLE: NixOS layer
 
-#+TAGS: layer|os
+[[file:img/nixos.jpg]]
 
-[[file:img/nixos.png]]
-
-* Table of Contents                     :TOC_5_gh:noexport:
-- [[#description][Description]]
-  - [[#features][Features:]]
-- [[#install][Install]]
-  - [[#layer][Layer]]
-- [[#configuration][Configuration]]
-- [[#key-bindings][Key bindings]]
-  - [[#nixos-options][NixOS Options]]
+* Table of Contents                                         :TOC_4_gh:noexport:
+ - [[#description][Description]]
+   - [[#features][Features:]]
+ - [[#install][Install]]
+   - [[#layer][Layer]]
+ - [[#key-bindings][Key Bindings]]
+   - [[#nixos-options][NixOS Options]]
 
 * Description
-This layer adds tools for better integration of Emacs in NixOS.
+
+This layer adds tools for better integration of emacs in NixOS.
 
 ** Features:
-- Nix-mode using [[https://github.com/NixOS/nix-mode][nix-mode]]
+- Nix-mode using  [[https://github.com/NixOS/nix/blob/master/misc/emacs/nix-mode.el][nix-mode]]
 - Auto-completion of NixOS Options using [[https://github.com/travisbhartwell/nix-emacs/blob/master/company-nixos-options.el][company-nixos-options]]
-- Helm Lookup for NixOS Options [[https://github.com/travisbhartwell/nix-emacs/blob/master/helm-nixos-options.el][helm-nixos-options]]
+- Helm Lookup for NixOS Options  [[https://github.com/travisbhartwell/nix-emacs/blob/master/helm-nixos-options.el][helm-nixos-options]]
 
 * Install
 ** Layer
@@ -27,17 +25,10 @@ To use this configuration layer, add it to your =~/.spacemacs=. You will need to
 add =nixos= to the existing =dotspacemacs-configuration-layers= list in this
 file.
 
-* Configuration
-Toggle whether =company-nixos-options= completion is enabled (defaults to =t=).
+* Key Bindings
 
-#+BEGIN_SRC emacs-lisp
-  (setq-default dotspacemacs-configuration-layers
-                '((nixos :variables nixos-enable-company t)))
-#+END_SRC
-
-* Key bindings
 ** NixOS Options
 
-| Key binding | Description             |
+| Key Binding | Description             |
 |-------------+-------------------------|
 | ~SPC h >~   | Call helm-nixos-options |

@@ -1,6 +1,6 @@
 ;;; core-use-package-ext.el --- Spacemacs Core File
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -39,7 +39,7 @@ override lazy-loaded settings."
   (let ((name-symbol (if (stringp name) (intern name) name))
         (expanded-forms '()))
     (dolist (keyword spacemacs--use-package-add-hook-keywords)
-      (let ((body (spacemacs/mplist-get-values plist keyword)))
+      (let ((body (spacemacs/mplist-get plist keyword)))
         (when body
           (let ((hook (intern (format "use-package--%S--%s-hook"
                                       name-symbol

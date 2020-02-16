@@ -1,19 +1,17 @@
 #+TITLE: Asciidoc layer
 
-#+TAGS: dsl|layer|markup|programming
-
-* Table of Contents                     :TOC_5_gh:noexport:
-- [[#description][Description]]
-  - [[#features][Features:]]
-- [[#install][Install]]
-- [[#key-bindings][Key bindings]]
-  - [[#element-insertion][Element insertion]]
-  - [[#promotion-demotion][Promotion, Demotion]]
+* Table of Contents                                         :TOC_4_gh:noexport:
+ - [[#description][Description]]
+   - [[#feature][Feature]]
+ - [[#install][Install]]
+ - [[#key-bindings][Key bindings]]
+   - [[#element-insertion][Element insertion]]
+   - [[#promotion-demotion][Promotion, Demotion]]
 
 * Description
 This layer adds [[https://asciidoctor.org][AsciiDoc]] markup language support to Spacemacs.
 
-** Features:
+** Feature
 - asciidoc format support via [[https://github.com/sensorflo/adoc-mode][adoc-mode]]
 - =.adoc= files are associated with =adoc-mode= by default
 
@@ -25,7 +23,7 @@ file.
 * Key bindings
 ** Element insertion
 
-| Key binding | Description                                   |
+| Key Binding | Description                                   |
 |-------------+-----------------------------------------------|
 | ~SPC m h 1~ | Insert title level 1                          |
 | ~SPC m h I~ | Insert title level 1 (the most important one) |
@@ -40,7 +38,8 @@ file.
 
 ** Promotion, Demotion
 
-| Key binding | Description         |
+| Key Binding | Description         |
 |-------------+---------------------|
 | ~M-h~       | Promote title level |
 | ~M-l~       | Demote title level  |
+

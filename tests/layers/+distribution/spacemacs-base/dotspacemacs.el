@@ -1,6 +1,6 @@
 (defun dotspacemacs/layers ()
   (setq-default
-   dotspacemacs-distribution 'spacemacs-base))
+   dotspacemacs-distribution 'spacemacs))
 (defun dotspacemacs/init ())
 (defun dotspacemacs/user-init ())
 (defun dotspacemacs/config ())

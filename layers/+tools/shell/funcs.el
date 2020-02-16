@@ -1,6 +1,6 @@
 ;;; funcs.el --- Shell Layer functions File
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -37,48 +37,38 @@
                             (when (string-match "\\(finished\\|exited\\)"
                                                 change)
                               (kill-buffer (process-buffer proc))
-                              (when (and close-window-with-terminal
-                                         (> (count-windows) 1))
+                              (when (> (count-windows) 1)
                                 (delete-window)))))))
 
 (defun spacemacs/default-pop-shell ()
   "Open the default shell in a popup."
   (interactive)
-  (let ((shell (cl-case shell-default-shell
-                 ('multi-term 'multiterm)
-                 ('shell 'inferior-shell)
-                 (t shell-default-shell))))
+  (let ((shell (if (eq 'multi-term shell-default-shell)
+                   'multiterm
+                 shell-default-shell)))
     (call-interactively (intern (format "spacemacs/shell-pop-%S" shell)))))
 
-(defun spacemacs/resize-shell-to-desired-width ()
-  (when (and (string= (buffer-name) shell-pop-last-shell-buffer-name)
-             (memq shell-pop-window-position '(left right)))
-    (enlarge-window-horizontally (- (/ (* (frame-width) shell-default-width)
-                                       100)
-                                    (window-width)))))
-
-(defmacro make-shell-pop-command (name func &optional shell)
+(defmacro make-shell-pop-command (func &optional shell)
   "Create a function to open a shell via the function FUNC.
 SHELL is the SHELL function to use (i.e. when FUNC represents a terminal)."
-  `(defun ,(intern (concat "spacemacs/shell-pop-" name)) (index)
-     ,(format (concat "Toggle a popup window with `%S'.\n"
-                      "Multiple shells can be opened with a numerical prefix "
-                      "argument. Using the universal prefix argument will "
-                      "open the shell in the current buffer instead of a "
-                      "popup buffer.")
-              func)
-     (interactive "P")
-     (require 'shell-pop)
-     (if (equal '(4) index)
-         ;; no popup
-         (,func ,shell)
-       (shell-pop--set-shell-type
-        'shell-pop-shell-type
-        (backquote (,name
-                    ,(concat "*" name "*")
-                    (lambda nil (,func ,shell)))))
-       (shell-pop index)
-       (spacemacs/resize-shell-to-desired-width))))
+  (let* ((name (symbol-name func)))
+    `(defun ,(intern (concat "spacemacs/shell-pop-" name)) (index)
+       ,(format (concat "Toggle a popup window with `%S'.\n"
+                        "Multiple shells can be opened with a numerical prefix "
+                        "argument. Using the universal prefix argument will "
+                        "open the shell in the current buffer instead of a "
+                        "popup buffer.") func)
+       (interactive "P")
+       (require 'shell-pop)
+       (if (equal '(4) index)
+           ;; no popup
+           (,func ,shell)
+         (shell-pop--set-shell-type
+          'shell-pop-shell-type
+          (backquote (,name
+                      ,(concat "*" name "*")
+                      (lambda nil (,func ,shell)))))
+         (shell-pop index)))))
 
 (defun projectile-multi-term-in-root ()
   "Invoke `multi-term' in the project's root."
@@ -92,23 +82,17 @@ connections the delay is often annoying, so it's better to let
 the user activate the completion manually."
   (if (file-remote-p default-directory)
       (setq-local company-idle-delay nil)
-    (setq-local company-idle-delay auto-completion-idle-delay)))
+    (setq-local company-idle-delay 0.2)))
 
 (defun spacemacs//eshell-switch-company-frontend ()
   "Sets the company frontend to `company-preview-frontend' in e-shell mode."
-  (require 'company)
   (setq-local company-frontends '(company-preview-frontend)))
 
 (defun spacemacs//eshell-auto-end ()
   "Move point to end of current prompt when switching to insert state."
   (when (and (eq major-mode 'eshell-mode)
              ;; Not on last line, we might want to edit within it.
-             (not (eq (line-end-position) (point-max)))
-             ;; Not on the last sent command if we use smart-eshell so we can
-             ;; edit it.
-             (not (and shell-enable-smart-eshell
-                       (>= (point) eshell-last-input-start)
-                       (< (point) eshell-last-input-end))))
+             (not (eq (line-end-position) (point-max))))
     (end-of-buffer)))
 
 (defun spacemacs//protect-eshell-prompt ()
@@ -130,32 +114,26 @@ is achieved by adding the relevant text properties."
   "Stuff to do when enabling eshell."
   (setq pcomplete-cycle-completions nil)
   (if (bound-and-true-p linum-mode) (linum-mode -1))
-  ;; autojump to prompt line if not on one already
-  (add-hook 'evil-insert-state-entry-hook
-            'spacemacs//eshell-auto-end nil t)
-  (add-hook 'evil-hybrid-state-entry-hook
-            'spacemacs//eshell-auto-end nil t)
-  (when (configuration-layer/package-used-p 'semantic)
+  (unless shell-enable-smart-eshell
+    ;; we don't want auto-jump to prompt when smart eshell is enabled.
+    ;; Idea: maybe we could make auto-jump smarter and jump only if
+    ;; point is not on a prompt line
+    (add-hook 'evil-insert-state-entry-hook
+              'spacemacs//eshell-auto-end nil t)
+    (add-hook 'evil-hybrid-state-entry-hook
+              'spacemacs//eshell-auto-end nil t))
+  (when (configuration-layer/package-usedp 'semantic)
     (semantic-mode -1))
-  ;; This is an eshell alias
-  (defun eshell/clear ()
-    (let ((inhibit-read-only t))
-      (erase-buffer)))
-  ;; This is a key-command
-  (defun spacemacs/eshell-clear-keystroke ()
-    "Allow for keystrokes to invoke eshell/clear"
-    (interactive)
-    (eshell/clear)
-    (eshell-send-input))
   ;; Caution! this will erase buffer's content at C-l
-  (define-key eshell-mode-map (kbd "C-l") 'spacemacs/eshell-clear-keystroke)
-  (define-key eshell-mode-map (kbd "C-d") 'eshell-delchar-or-maybe-eof)
+  (define-key eshell-mode-map (kbd "C-l") 'eshell/clear)
+  (define-key eshell-mode-map (kbd "C-d") 'eshell-delchar-or-maybe-eof))
 
-  ;; These don't work well in normal state
-  ;; due to evil/emacs cursor incompatibility
-  (evil-define-key 'insert eshell-mode-map
-    (kbd "C-k") 'eshell-previous-matching-input-from-input
-    (kbd "C-j") 'eshell-next-matching-input-from-input))
+;; This is an eshell alias
+(defun eshell/clear ()
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer))
+  (eshell-send-input))
 
 (defun spacemacs/helm-eshell-history ()
   "Correctly revert to insert state after selection."
@@ -171,51 +149,19 @@ is achieved by adding the relevant text properties."
 
 (defun spacemacs/init-helm-eshell ()
   "Initialize helm-eshell."
-  (define-key eshell-mode-map (kbd "<tab>") 'helm-esh-pcomplete)
+  ;; this is buggy for now
+  ;; (define-key eshell-mode-map (kbd "<tab>") 'helm-esh-pcomplete)
   (spacemacs/set-leader-keys-for-major-mode 'eshell-mode
     "H" 'spacemacs/helm-eshell-history)
   (define-key eshell-mode-map
     (kbd "M-l") 'spacemacs/helm-eshell-history))
 
-(defun spacemacs/ivy-eshell-history ()
+(defun multiterm (_)
+  "Wrapper to be able to call multi-term from shell-pop"
   (interactive)
-  (counsel-esh-history)
-  (evil-insert-state))
-
-(defun spacemacs/pcomplete-std-complete ()
-  (interactive)
-  (pcomplete-std-complete)
-  (evil-insert-state))
-
-(defun spacemacs/init-ivy-eshell ()
-  "Initialize ivy-eshell."
-  (spacemacs/set-leader-keys-for-major-mode 'eshell-mode
-    "H" #'spacemacs/ivy-eshell-history)
-  (define-key eshell-mode-map (kbd "M-l") #'spacemacs/ivy-eshell-history)
-  (define-key eshell-mode-map (kbd "<tab>") #'spacemacs/pcomplete-std-complete))
+  (multi-term))
 
 (defun term-send-tab ()
   "Send tab in term mode."
   (interactive)
   (term-send-raw-string "\t"))
-
-;; Wrappers for non-standard shell commands
-(defun multiterm (&optional ARG)
-  "Wrapper to be able to call multi-term from shell-pop"
-  (interactive)
-  (multi-term))
-
-(defun inferior-shell (&optional ARG)
-  "Wrapper to open shell in current window"
-  (interactive)
-  (switch-to-buffer "*shell*")
-  (shell "*shell*"))
-
-;; https://stackoverflow.com/questions/6837511/automatically-disable-a-global-minor-mode-for-a-specific-major-mode
-(defun spacemacs//inhibit-global-centered-cursor-mode ()
-  "Counter-act `global-centered-cursor-mode'."
-  (add-hook 'after-change-major-mode-hook
-            (lambda ()
-              (centered-cursor-mode 0))
-            :append
-            :local))

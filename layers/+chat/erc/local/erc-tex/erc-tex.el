@@ -39,7 +39,7 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl-lib))
+(eval-when-compile (require 'cl))
 (require 'erc)
 
 
@@ -93,7 +93,7 @@
                  ;; Return a string which stand for COLOR in the format that
                  ;; dvipng understands.
                  (let ((max (car (color-values "#ffffff"))))
-                   (cl-destructuring-bind (r g b)
+                   (destructuring-bind (r g b)
                        (color-values color)
                      (format "rgb %.02f %.02f %.02f"
                              (/ (float r) max)

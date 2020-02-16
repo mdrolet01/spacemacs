@@ -1,15 +1,14 @@
-;;; config.el --- YAML Layer Configuration File for Spacemacs
+;;; config.el --- YAML Layer configuration File for Spacemacs
 ;;
-;; Copyright (c) 2012-2019 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2016 Sylvain Benner & Contributors
 ;;
-;; Author: Seong Yong-ju <sei40kr@gmail.com>
+;; Author: Sylvain Benner <sylvain.benner@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
 ;;
 ;; This file is not part of GNU Emacs.
 ;;
 ;;; License: GPLv3
 
-(spacemacs|define-jump-handlers yaml-mode)
+;; variables
 
-(defvar yaml-enable-lsp nil
-  "If non-nil, enable lsp-mode in YAML buffers.")
+(spacemacs|defvar-company-backends yaml-mode)

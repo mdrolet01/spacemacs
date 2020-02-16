@@ -1,6 +1,6 @@
 ;;; packages.el --- Asm Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Tu, Do Hoang <tuhdo1710@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -13,10 +13,8 @@
       '(
         ;; package names go here
         asm-mode
-        company
         electric-indent-mode
         ggtags
-        counsel-gtags
         helm-gtags
         nasm-mode
         x86-lookup
@@ -29,7 +27,7 @@
     :config
     (progn
       ;; We need to insert a non-indented line, otherwise it's annoying
-      ;; every time we insert a comment for a routine
+      ;; everytime we insert a comment for a routine
       (define-key asm-mode-map (kbd "C-j") 'newline)
       (add-hook 'asm-mode-hook #'asm-generic-setup))))
 
@@ -48,7 +46,7 @@
     :config
     (progn
       ;; We need to insert a non-indented line, otherwise it's annoying
-      ;; every time we insert a comment for a routine
+      ;; everytime we insert a comment for a routine
       (define-key nasm-mode-map (kbd "C-j") 'newline)
       ;; we use the advised `asm-colon' because `nasm-colon indents the whole line, even
       ;; inside a comment
@@ -63,13 +61,11 @@
         (setq x86-lookup-browse-pdf-function 'x86-lookup-browse-pdf-pdf-tools)))))
 
 (defun asm/post-init-company ()
-  (spacemacs|add-company-backends :modes asm-mode nasm-mode))
+  (spacemacs|add-company-hook asm-mode)
+  (spacemacs|add-company-hook nasm-mode))
 
 (defun asm/post-init-ggtags ()
   (add-hook 'asm-mode-local-vars-hook #'spacemacs/ggtags-mode-enable))
-
-(defun asm/post-init-counsel-gtags ()
-  (spacemacs/counsel-gtags-define-keys-for-mode 'asm-mode))
 
 (defun asm/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'asm-mode))

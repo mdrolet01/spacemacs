@@ -1,58 +1,44 @@
 #+TITLE: Django layer
 
-#+TAGS: framework|layer|programming
-
 [[file:img/django.png]]
 
-* Table of Contents                     :TOC_5_gh:noexport:
-- [[#description][Description]]
-  - [[#features][Features:]]
-- [[#install][Install]]
-- [[#key-bindings][Key bindings]]
-  - [[#general-managment][General Managment]]
-  - [[#fabric][Fabric]]
-  - [[#files][Files]]
-  - [[#interactive][Interactive]]
-  - [[#server][Server]]
-  - [[#southsyncdb][South/Syncdb]]
-  - [[#test][Test]]
+* Table of Contents                                         :TOC_4_gh:noexport:
+ - [[#description][Description]]
+ - [[#install][Install]]
+ - [[#key-bindings][Key Bindings]]
+   - [[#fabric][Fabric]]
+   - [[#files][Files]]
+   - [[#interactive][Interactive]]
+   - [[#server][Server]]
+   - [[#southsyncdb][South/Syncdb]]
+   - [[#test][Test]]
 
 * Description
-This layer adds support for the Python web framework [[https://www.djangoproject.com/][Django]] to Spacemacs.
-
-** Features:
-- Test execution directly from emacs
-- Starting/stopping of the Django test server
-- Starting of an interactive Python shell in the current project for debugging
-- Fixed commands to open various Django specific settings files
-- Automatic deployment with [[http://www.fabfile.org][Fabric]] directly from emacs
-- Control of [[http://south.aeracode.org/][South]] database migration tool
+This layer adds support for the Python [[https://www.djangoproject.com/][Django]] framework via [[https://github.com/davidmiller/pony-mode][pony-mode]].
 
 * Install
 To use this configuration layer, add it to your =~/.spacemacs=. You will need to
 add =django= to the existing =dotspacemacs-configuration-layers= list in this
 file.
 
-* Key bindings
-Django related key bindings uses [[https://github.com/davidmiller/pony-mode][pony-mode]] and are behind the prefix ~SPC m j~ in =Python-mode=.
-Various configuration options for =pony-mode= are documented at [[http://www.deadpansincerity.com/docs/pony/configuration.html][deadpansincerity.com]].
+* Key Bindings
+Django related key bindings uses  [[https://github.com/davidmiller/pony-mode][pony-mode]] and are behind the prefix ~SPC m j~.
 
-** General Managment
+Configuration options for pony-mode are documented at
+[[http://www.deadpansincerity.com/docs/pony/configuration.html][deadpansincerity.com]]
 
-| Key binding | Description                           |
-|-------------+---------------------------------------|
-| ~SPC m j m~ | Start a =pony-mode= managment session |
+Manage Django with ~SPC m j m~.
 
 ** Fabric
 
-| Key binding   | Description                      |
+| Key Binding   | Description                      |
 |---------------+----------------------------------|
 | ~SPC m j a f~ | Run a fabric command             |
 | ~SPC m j a d~ | Deploy project with =fab deploy= |
 
 ** Files
 
-| Key binding   | Description                                                   |
+| Key Binding   | Description                                                   |
 |---------------+---------------------------------------------------------------|
 | ~SPC m j f s~ | Open the =settings.py= for this project                       |
 | ~SPC m j f c~ | Interactively display a setting value in the minibuffer       |
@@ -61,16 +47,14 @@ Various configuration options for =pony-mode= are documented at [[http://www.dea
 
 ** Interactive
 
-| Key binding   | Description                                                                |
-|---------------+----------------------------------------------------------------------------|
-| ~SPC m j i d~ | Run interpreter for this project's default database as an inferior process |
-| ~SPC m j i s~ | Open a Python shell with the current pony project's context loaded.        |
-|               | If the project has the django_extras package installed, then use the       |
-|               | excellent =shell_plus= command. Otherwise, fall back to =manage.py shell=  |
+| Key Binding   | Description                                                                                                                                                                                                        |
+|---------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ~SPC m j i d~ | Run interpreter for this project's default database as an inferior process                                                                                                                                         |
+| ~SPC m j i s~ | Open a Python shell with the current pony project's context loaded. If the project has the django_extras package installed, then use the excellent =shell_plus= command. Otherwise, fall back to =manage.py shell= |
 
 ** Server
 
-| Key binding   | Description                                                       |
+| Key Binding   | Description                                                       |
 |---------------+-------------------------------------------------------------------|
 | ~SPC m j r d~ | Stop the dev server                                               |
 | ~SPC m j r o~ | Open a tab at the dev server                                      |
@@ -80,7 +64,7 @@ Various configuration options for =pony-mode= are documented at [[http://www.dea
 
 ** South/Syncdb
 
-| Key binding   | Description                                |
+| Key Binding   | Description                                |
 |---------------+--------------------------------------------|
 | ~SPC m j s c~ | Convert an existing app to south           |
 | ~SPC m j s h~ | Create migration for modification          |
@@ -90,7 +74,7 @@ Various configuration options for =pony-mode= are documented at [[http://www.dea
 
 ** Test
 
-| Key binding   | Description                                                      |
+| Key Binding   | Description                                                      |
 |---------------+------------------------------------------------------------------|
 | ~SPC m j t d~ | Move down the traceback one level                                |
 | ~SPC m j t e~ | Go to the file and line of the last stack trace in a test buffer |

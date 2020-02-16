@@ -53,7 +53,7 @@
 ;;             (local-set-key "\C-cpm" 'nosetests-pdb-module)
 ;;             (local-set-key "\C-cp." 'nosetests-pdb-one)))
 
-(require 'cl-lib) ;; for "cl-reduce"
+(require 'cl) ;; for "reduce"
 
 (defvar nose-project-root-files '(".projectile"
                                   "setup.cfg"
@@ -61,15 +61,12 @@
                                   ".git"))
 (defvar nose-project-root-test 'nose-project-root)
 (defvar nose-use-verbose t)
-(defvar nose--last-run-params nil
-  "Stores the last parameters passed to run-nose")
 
 (defun run-nose (&optional tests suite debug failed)
   "run nosetests by calling python instead of nosetests script.
 To be able to debug on Windows platform python output must be not buffered.
 For more details: http://pswinkels.blogspot.ca/2010/04/debugging-python-code-from-within-emacs.html
 "
-  (setq nose--last-run-params (list tests suite debug failed))
   (let* ((nose (nosetests-nose-command))
          (where (nose-find-project-root))
          (args (concat (if debug "--pdb" "")
@@ -96,17 +93,12 @@ For more details: http://pswinkels.blogspot.ca/2010/04/debugging-python-code-fro
   )
 
 (defun nosetests-nose-command ()
-  (let ((nose "python -u -c \"import nose; nose.main()\""))
+  (let ((nose "python -u -c \"import nose; nose.run()\""))
     (if python-shell-virtualenv-path
         (if (spacemacs/system-is-mswindows)
             (format "%s/Scripts/%s" python-shell-virtualenv-path nose)
          (format "%s/bin/%s" python-shell-virtualenv-path nose))
       nose)))
-
-(defun nosetests-again ()
-  "runs the most recently executed 'nosetests' command again"
-  (interactive)
-  (apply 'run-nose nose--last-run-params))
 
 (defun nosetests-all (&optional debug failed)
   "run all tests"
@@ -187,7 +179,7 @@ For more details: http://pswinkels.blogspot.ca/2010/04/debugging-python-code-fro
              (file-name-directory (directory-file-name dn)))))))
 
 (defun nose-project-root (dirname)
-  (cl-reduce '(lambda (x y) (or x y))
+  (reduce '(lambda (x y) (or x y))
           (mapcar (lambda (d) (member d (directory-files dirname)))
                   nose-project-root-files)))
 

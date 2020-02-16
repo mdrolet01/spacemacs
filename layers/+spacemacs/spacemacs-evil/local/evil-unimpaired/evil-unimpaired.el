@@ -54,13 +54,11 @@
 
 (defun evil-unimpaired/paste-above ()
   (interactive)
-  (setq this-command 'evil-paste-after)
   (evil-insert-newline-above)
   (evil-paste-after 1))
 
 (defun evil-unimpaired/paste-below ()
   (interactive)
-  (setq this-command 'evil-paste-after)
   (evil-insert-newline-below)
   (evil-paste-after 1))
 
@@ -74,11 +72,11 @@
 
 (defun evil-unimpaired/next-frame ()
   (interactive)
-  (select-frame-set-input-focus (next-frame)))
+  (raise-frame (next-frame)))
 
 (defun evil-unimpaired/previous-frame ()
   (interactive)
-  (select-frame-set-input-focus (previous-frame)))
+  (raise-frame (previous-frame)))
 
 ;; from tpope's unimpaired
 (define-key evil-normal-state-map (kbd "[ SPC")
@@ -91,19 +89,18 @@
 (define-key evil-visual-state-map (kbd "] e") ":move'>+1")
 ;; (define-key evil-visual-state-map (kbd "[ e") 'move-text-up)
 ;; (define-key evil-visual-state-map (kbd "] e") 'move-text-down)
-;; navigation
-(define-key evil-motion-state-map (kbd "[ b") 'previous-buffer)
-(define-key evil-motion-state-map (kbd "] b") 'next-buffer)
-(define-key evil-motion-state-map (kbd "[ f") 'evil-unimpaired/previous-file)
-(define-key evil-motion-state-map (kbd "] f") 'evil-unimpaired/next-file)
-(define-key evil-motion-state-map (kbd "] l") 'spacemacs/next-error)
-(define-key evil-motion-state-map (kbd "[ l") 'spacemacs/previous-error)
-(define-key evil-motion-state-map (kbd "] q") 'spacemacs/next-error)
-(define-key evil-motion-state-map (kbd "[ q") 'spacemacs/previous-error)
-(define-key evil-motion-state-map (kbd "[ t") 'evil-unimpaired/previous-frame)
-(define-key evil-motion-state-map (kbd "] t") 'evil-unimpaired/next-frame)
-(define-key evil-motion-state-map (kbd "[ w") 'previous-multiframe-window)
-(define-key evil-motion-state-map (kbd "] w") 'next-multiframe-window)
+(define-key evil-normal-state-map (kbd "[ b") 'previous-buffer)
+(define-key evil-normal-state-map (kbd "] b") 'next-buffer)
+(define-key evil-normal-state-map (kbd "[ f") 'evil-unimpaired/previous-file)
+(define-key evil-normal-state-map (kbd "] f") 'evil-unimpaired/next-file)
+(define-key evil-normal-state-map (kbd "] l") 'spacemacs/next-error)
+(define-key evil-normal-state-map (kbd "[ l") 'spacemacs/previous-error)
+(define-key evil-normal-state-map (kbd "] q") 'spacemacs/next-error)
+(define-key evil-normal-state-map (kbd "[ q") 'spacemacs/previous-error)
+(define-key evil-normal-state-map (kbd "[ t") 'evil-unimpaired/previous-frame)
+(define-key evil-normal-state-map (kbd "] t") 'evil-unimpaired/next-frame)
+(define-key evil-normal-state-map (kbd "[ w") 'previous-multiframe-window)
+(define-key evil-normal-state-map (kbd "] w") 'next-multiframe-window)
 ;; select pasted text
 (define-key evil-normal-state-map (kbd "g p") (kbd "` [ v ` ]"))
 ;; paste above or below with newline

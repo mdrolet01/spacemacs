@@ -1,6 +1,6 @@
-;;; config.el --- react layer config file for Spacemacs. -*- lexical-binding: t -*-
+;;; config.el --- react Layer packages File for Spacemacs
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: Andrea Moretti <axyzxp@gmail.com>
 ;; URL: https://github.com/axyz
@@ -9,4 +9,8 @@
 ;;
 ;;; License: GPLv3
 
-(spacemacs|define-jump-handlers rjsx-mode)
+;; Variables
+
+(spacemacs|defvar-company-backends react-mode)
+
+(spacemacs|define-jump-handlers react-mode)

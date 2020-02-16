@@ -1,6 +1,6 @@
 ;;; packages.el --- graphviz layer packages file for Spacemacs.
 ;;
-;; Copyright (c) 2012-2018 Sylvain Benner & Contributors
+;; Copyright (c) 2012-2017 Sylvain Benner & Contributors
 ;;
 ;; Author: luxbock <opieppo@gmail.com>
 ;; URL: https://github.com/syl20bnr/spacemacs
@@ -10,11 +10,10 @@
 ;;; License: GPLv3
 
 (defconst graphviz-packages
-  '(
-    graphviz-dot-mode
+  '((graphviz-dot-mode :location (recipe :fetcher github
+                                         :repo "luxbock/graphviz-dot-mode"))
     org
-    smartparens
-    ))
+    smartparens))
 
 (defun graphviz/init-graphviz-dot-mode ()
   (use-package graphviz-dot-mode
@@ -24,7 +23,6 @@
            ("\\.rackdiag\\'"  . graphviz-dot-mode)
            ("\\.dot\\'"       . graphviz-dot-mode)
            ("\\.gv\\'"        . graphviz-dot-mode))
-    :init (setq graphviz-dot-indent-width tab-width)
     :config
     (progn
       (spacemacs|add-toggle graphviz-live-reload
@@ -43,7 +41,7 @@
         (spacemacs/set-leader-keys-for-major-mode 'graphviz-dot-mode
           dotspacemacs-major-mode-leader-key 'graphviz-dot-preview)))))
 
-(defun graphviz/pre-init-smartparens ()
+(defun graphviz/post-init-smartparens ()
   (spacemacs|use-package-add-hook graphviz-dot-mode
     :post-config
     (progn
@@ -51,7 +49,7 @@
       (define-key graphviz-dot-mode-map "{" nil)
       (define-key graphviz-dot-mode-map "}" nil))))
 
-(defun graphviz/pre-init-org ()
+(defun graphviz/post-init-org ()
   (spacemacs|use-package-add-hook org
     :post-config
     (progn
