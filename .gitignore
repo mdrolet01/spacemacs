@@ -7,6 +7,7 @@
 .ac-php-conf.json
 /.cache/*
 !/.cache/anaconda-mode/
+!/.cache/treemacs-persist
 .dap-breakpoints
 .directory
 .emacs.desktop
